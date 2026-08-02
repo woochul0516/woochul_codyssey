@@ -1,223 +1,286 @@
 import json
-import os
-import sys
+import random
+from datetime import datetime
 
-# ---------------------------------------------------------
-# 1. Quiz 클래스 (개별 퀴즈 정보 및 정답 검증)
-# ---------------------------------------------------------
 class Quiz:
-    def __init__(self, question: str, choices: list, answer: int):
+    def __init__(self, question, choices, answer, hint=""):
         self.question = question
         self.choices = choices
-        self.answer = answer  # 1-4 사이 번호
+        self.answer = answer  # 1-based index
+        self.hint = hint
 
-    def is_correct(self, user_answer: int) -> bool:
-        return self.answer == user_answer
-
-    def to_dict(self) -> dict:
+    def to_dict(self):
         return {
             "question": self.question,
             "choices": self.choices,
-            "answer": self.answer
+            "answer": self.answer,
+            "hint": self.hint
         }
 
     @classmethod
-    def from_dict(cls, data: dict):
-        return cls(data["question"], data["choices"], data["answer"])
+    def from_dict(cls, data):
+        return cls(
+            question=data["question"],
+            choices=data["choices"],
+            answer=data["answer"],
+            hint=data.get("hint", "힌트가 제공되지 않는 문제입니다.")
+        )
 
 
-# ---------------------------------------------------------
-# 2. QuizGame 클래스 (전체 게임 관리 및 JSON 영속성)
-# ---------------------------------------------------------
 class QuizGame:
-    # main.py 파일이 위치한 디렉토리를 절대경로로 구하여 state.json 경로 고정
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    FILE_PATH = os.path.join(BASE_DIR, "state.json")
-
-    def __init__(self):
+    def __init__(self, filepath="state.json"):
+        self.filepath = filepath
         self.quizzes = []
-        self.best_score = 0
-        self.load_state()
+        self.best_score = 0.0
+        self.history = []
+        self.load_data()
 
     def get_default_quizzes(self):
-            """기본 제공 퀴즈 데이터 (주제: 컴퓨터 하드웨어 기초)"""
-            return [
-                Quiz(
-                    "컴퓨터의 '뇌' 역할을 하며 연산과 명령을 처리하는 핵심 하드웨어 장치는?",
-                    ["RAM (메모리)", "CPU (중앙처리장치)", "SSD (보조기억장치)", "GPU (그래픽카드)"],
-                    2
-                ),
-                Quiz(
-                    "전원이 꺼지면 저장된 데이터가 사라지는 '휘발성' 기억장치는?",
-                    ["RAM", "HDD", "SSD", "ROM"],
-                    1
-                ),
-                Quiz(
-                    "컴퓨터가 사용하는 2진법에서 0과 1의 최소 데이터 단위를 무엇이라고 할까요?",
-                    ["Byte", "Bit", "KB", "Word"],
-                    2
-                ),
-                Quiz(
-                    "CPU, 메모리, 그래픽카드 등 컴퓨터의 모든 부품을 연결하는 메인 회로 기판은?",
-                    ["파워 서플라이", "메인보드 (마더보드)", "랜카드", "사운드 카드"],
-                    2
-                ),
-                Quiz(
-                    "다음 중 비휘발성 저장장치로 물리적 회전 디스크 대신 반도체를 사용하는 보조기억장치는?",
-                    ["RAM", "HDD", "SSD", "CD-ROM"],
-                    3
-                )
-            ]
+        """state.json이 없거나 비어있을 때 불러올 기본 5개 퀴즈 데이터"""
+        return [
+            Quiz(
+                question="컴퓨터의 '뇌' 역할을 하며 연산과 명령을 처리하는 핵심 하드웨어 장치는?",
+                choices=["RAM (메모리)", "CPU (중앙처리장치)", "SSD (보조기억장치)", "GPU (그래픽카드)"],
+                answer=2,
+                hint="중앙처리장치의 약자입니다."
+            ),
+            Quiz(
+                question="전원이 꺼지면 저장된 데이터가 사라지는 '휘발성' 기억장치는?",
+                choices=["RAM", "HDD", "SSD", "ROM"],
+                answer=1,
+                hint="주기억장치 중 하나로 주소를 직접 참조합니다."
+            ),
+            Quiz(
+                question="컴퓨터가 사용하는 2진법에서 0과 1의 최소 데이터 단위를 무엇이라고 할까요?",
+                choices=["Byte", "Bit", "KB", "Word"],
+                answer=2,
+                hint="Binary Digit의 줄임말입니다."
+            ),
+            Quiz(
+                question="CPU, 메모리, 그래픽카드 등 컴퓨터의 모든 부품을 연결하는 메인 회로 기판은?",
+                choices=["파워 서플라이", "메인보드 (마더보드)", "랜카드", "사운드 카드"],
+                answer=2,
+                hint="마더보드라고도 부릅니다."
+            ),
+            Quiz(
+                question="다음 중 비휘발성 저장장치로 물리적 회전 디스크 대신 반도체를 사용하는 보조기억장치는?",
+                choices=["RAM", "HDD", "SSD", "CD-ROM"],
+                answer=3,
+                hint="Solid State Drive의 약자입니다."
+            )
+        ]
 
-    def load_state(self):
-        """state.json 파일 읽기 및 예외 복구"""
-        if not os.path.exists(self.FILE_PATH):
-            self.quizzes = self.get_default_quizzes()
-            self.best_score = 0
-            self.save_state()
-            return
-
+    def load_data(self):
         try:
-            with open(self.FILE_PATH, "r", encoding="utf-8") as f:
+            with open(self.filepath, "r", encoding="utf-8") as f:
                 data = json.load(f)
-                self.quizzes = [Quiz.from_dict(q) for q in data.get("quizzes", [])]
-                self.best_score = data.get("best_score", 0)
-                if not self.quizzes:
+                loaded_quizzes = [Quiz.from_dict(q) for q in data.get("quizzes", [])]
+                
+                # 파일에 퀴즈가 있으면 로드, 비어있으면 기본 퀴즈 5개 설정
+                if loaded_quizzes:
+                    self.quizzes = loaded_quizzes
+                else:
                     self.quizzes = self.get_default_quizzes()
-        except Exception as e:
-            print(f"\n⚠️ 파일 읽기 오류 발생 ({e}). 기본 데이터로 복구합니다.")
+                    
+                self.best_score = float(data.get("best_score", 0.0))
+                self.history = data.get("history", [])
+        except (FileNotFoundError, json.JSONDecodeError):
+            # 파일이 아예 없거나 깨진 경우 기본 데이터로 초기화 후 자동 저장
             self.quizzes = self.get_default_quizzes()
-            self.best_score = 0
-            self.save_state()
+            self.best_score = 0.0
+            self.history = []
+            self.save_data()
 
-    def save_state(self):
-        """state.json 파일 저장"""
-        try:
-            data = {
-                "quizzes": [q.to_dict() for q in self.quizzes],
-                "best_score": self.best_score
-            }
-            with open(self.FILE_PATH, "w", encoding="utf-8") as f:
-                json.dump(data, f, ensure_ascii=False, indent=4)
-        except Exception as e:
-            print(f"\n⚠️ 저장 중 오류가 발생했습니다: {e}")
+    def save_data(self):
+        data = {
+            "quizzes": [q.to_dict() for q in self.quizzes],
+            "best_score": self.best_score,
+            "history": self.history
+        }
+        with open(self.filepath, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
 
-    # --- 공통 입력 처리 유틸리티 ---
-    def safe_input_int(self, prompt: str, min_val: int, max_val: int) -> int:
-        """예외 처리 기능이 강화된 정수 입력 받기"""
-        while True:
-            try:
-                user_in = input(prompt).strip()
-                if not user_in:
-                    print("⚠️ 입력값이 비어 있습니다. 다시 입력해 주세요.")
-                    continue
-                val = int(user_in)
-                if min_val <= val <= max_val:
-                    return val
-                print(f"⚠️ {min_val}~{max_val} 사이의 숫자를 입력하세요.")
-            except ValueError:
-                print("⚠️ 숫자로만 입력해 주세요.")
-            except (KeyboardInterrupt, EOFError):
-                print("\n\n👋 프로그램을 안전하게 종료합니다.")
-                self.save_state()
-                sys.exit(0)
-
-    # --- 메뉴 기능 ---
     def play_quiz(self):
         if not self.quizzes:
-            print("\n⚠️ 등록된 퀴즈가 없습니다.")
+            print("\n[!] 등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가해주세요.")
             return
 
-        print(f"\n📝 퀴즈를 시작합니다! (총 {len(self.quizzes)}문제)")
-        score = 0
+        print(f"\n--- 퀴즈 풀기 (총 {len(self.quizzes)}문제 보유) ---")
+        
+        # [보너스] 푼 문제 수 선택
+        while True:
+            try:
+                count_input = input(f"풀고 싶은 문제 수를 입력하세요 (1~{len(self.quizzes)}): ").strip()
+                quiz_count = int(count_input)
+                if 1 <= quiz_count <= len(self.quizzes):
+                    break
+                print(f"[!] 1에서 {len(self.quizzes)} 사이의 숫자를 입력해주세요.")
+            except ValueError:
+                print("[!] 올바른 숫자를 입력해주세요.")
 
-        for idx, q in enumerate(self.quizzes, 1):
-            print(f"\n----------------------------------------")
-            print(f"[{idx}] {q.question}")
-            for c_idx, choice in enumerate(q.choices, 1):
-                print(f"  {c_idx}. {choice}")
+        # [보너스] 문제 랜덤 섞기
+        selected_quizzes = random.sample(self.quizzes, quiz_count)
+        current_score = 0.0
 
-            ans = self.safe_input_int("정답 입력 (1-4): ", 1, 4)
-            if q.is_correct(ans):
-                print("✅ 정답입니다!")
-                score += 1
-            else:
-                print(f"❌ 오답입니다. (정답: {q.answer}번)")
+        for idx, quiz in enumerate(selected_quizzes, start=1):
+            print(f"\n[문제 {idx}/{quiz_count}] {quiz.question}")
+            for i, choice in enumerate(quiz.choices, start=1):
+                print(f"  {i}. {choice}")
+            print("  H. 힌트 보기 (사용 시 정답 점수 0.5점 차감)")
 
-        print("\n========================================")
-        print(f"🏆 결과: {len(self.quizzes)}문제 중 {score}문제 정답!")
-        if score > self.best_score:
-            print(f"🎉 새로운 최고 점수 달성! ({self.best_score} -> {score})")
-            self.best_score = score
-            self.save_state()
-        print("========================================")
+            hint_used = False
+            while True:
+                user_input = input("정답 번호(1~4) 또는 H를 입력하세요: ").strip().upper()
+                
+                # [보너스] 힌트 보기
+                if user_input == 'H':
+                    if not hint_used:
+                        print(f"  💡 [힌트] {quiz.hint}")
+                        hint_used = True
+                    else:
+                        print("  [!] 이미 힌트를 확인했습니다.")
+                    continue
+
+                if user_input.isdigit() and 1 <= int(user_input) <= len(quiz.choices):
+                    user_ans = int(user_input)
+                    if user_ans == quiz.answer:
+                        # [보너스] 힌트 사용 시 점수 차감 (1점 -> 0.5점)
+                        gained_score = 0.5 if hint_used else 1.0
+                        current_score += gained_score
+                        print(f"⭕ 정답입니다! (+{gained_score}점)")
+                    else:
+                        print(f"❌ 틀렸습니다. 정답은 {quiz.answer}번입니다.")
+                    break
+                else:
+                    print("[!] 올바른 선택지를 입력해주세요.")
+
+        print(f"\n[결과] 총 {quiz_count}문제 중 {current_score}점을 획득하셨습니다!")
+
+        # 최고 점수 갱신
+        if current_score > self.best_score:
+            print(f"🎉 축하합니다! 새로운 최고 점수 달성! ({self.best_score}점 -> {current_score}점)")
+            self.best_score = current_score
+
+        # [보너스] 점수 기록 히스토리 저장
+        record = {
+            "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "total_questions": quiz_count,
+            "score": current_score
+        }
+        self.history.append(record)
+        self.save_data()
 
     def add_quiz(self):
-        print("\n📌 새로운 퀴즈를 추가합니다.")
-        try:
-            q_text = input("문제를 입력하세요: ").strip()
-            while not q_text:
-                print("⚠️ 문제는 비어 둘 수 없습니다.")
-                q_text = input("문제를 입력하세요: ").strip()
+        print("\n--- 새 퀴즈 추가 ---")
+        question = input("문제 내용을 입력하세요: ").strip()
+        while not question:
+            question = input("[!] 문제 내용을 입력하셔야 합니다: ").strip()
 
-            choices = []
-            for i in range(1, 5):
-                c_text = input(f"선택지 {i}: ").strip()
-                while not c_text:
-                    print("⚠️ 선택지는 비어 둘 수 없습니다.")
-                    c_text = input(f"선택지 {i}: ").strip()
-                choices.append(c_text)
+        choices = []
+        for i in range(1, 5):
+            choice = input(f"보기 {i}: ").strip()
+            while not choice:
+                choice = input(f"[!] 보기 {i}을(를) 입력해 주세요: ").strip()
+            choices.append(choice)
 
-            ans = self.safe_input_int("정답 번호 (1-4): ", 1, 4)
-            
-            self.quizzes.append(Quiz(q_text, choices, ans))
-            self.save_state()
-            print("✅ 퀴즈가 성공적으로 추가되었습니다!")
-        except (KeyboardInterrupt, EOFError):
-            print("\n\n👋 작업이 취소되었습니다. 메인 메뉴로 돌아갑니다.")
+        while True:
+            try:
+                answer = int(input("정답 번호 (1~4): ").strip())
+                if 1 <= answer <= 4:
+                    break
+                print("[!] 1에서 4 사이의 숫자를 입력해주세요.")
+            except ValueError:
+                print("[!] 올바른 숫자를 입력해주세요.")
+
+        # [보너스] 힌트 입력 속성
+        hint = input("힌트를 입력하세요 (없으면 엔터): ").strip()
+        if not hint:
+            hint = "힌트가 제공되지 않는 문제입니다."
+
+        new_quiz = Quiz(question, choices, answer, hint)
+        self.quizzes.append(new_quiz)
+        self.save_data()
+        print("✅ 퀴즈가 성공적으로 추가되었습니다!")
 
     def list_quizzes(self):
-        print(f"\n📋 등록된 퀴즈 목록 (총 {len(self.quizzes)}개)")
-        print("----------------------------------------")
+        print(f"\n--- 전체 퀴즈 목록 (총 {len(self.quizzes)}개) ---")
         if not self.quizzes:
             print("등록된 퀴즈가 없습니다.")
             return
-        for idx, q in enumerate(self.quizzes, 1):
-            print(f"[{idx}] {q.question}")
-        print("----------------------------------------")
 
-    def show_score(self):
-        print("\n========================================")
-        print(f"🏆 현재 최고 점수: {self.best_score}점")
-        print("========================================")
+        for idx, quiz in enumerate(self.quizzes, start=1):
+            print(f"\n[{idx}] {quiz.question}")
+            for i, choice in enumerate(quiz.choices, start=1):
+                print(f"    {i}. {choice}")
+            print(f"    정답: {quiz.answer}번 | 힌트: {quiz.hint}")
 
-    def run(self):
+    def delete_quiz(self):
+        # [보너스] 퀴즈 삭제 기능
+        self.list_quizzes()
+        if not self.quizzes:
+            return
+
+        print("\n--- 퀴즈 삭제 ---")
         while True:
-            print("\n========================================")
-            print("        🎯 나만의 퀴즈 게임 🎯")
-            print("========================================")
+            try:
+                del_input = input("삭제할 퀴즈 번호를 입력하세요 (취소: 0): ").strip()
+                del_idx = int(del_input)
+                if del_idx == 0:
+                    print("삭제를 취소했습니다.")
+                    return
+                if 1 <= del_idx <= len(self.quizzes):
+                    deleted = self.quizzes.pop(del_idx - 1)
+                    self.save_data()
+                    print(f"✅ [{deleted.question}] 퀴즈가 삭제되었습니다.")
+                    return
+                print("[!] 올바른 퀴즈 번호를 입력해주세요.")
+            except ValueError:
+                print("[!] 숫자를 입력해주세요.")
+
+    def show_score_and_history(self):
+        # [보너스] 최고 점수 및 히스토리 출력
+        print("\n--- 점수 및 게임 기록 ---")
+        print(f"🏆 최고 점수: {self.best_score}점")
+        print("\n[최근 게임 기록]")
+        if not self.history:
+            print("아직 진행한 게임 기록이 없습니다.")
+            return
+
+        for idx, h in enumerate(reversed(self.history[-5:]), start=1):
+            print(f" {idx}. 일시: {h['date']} | 푼 문제: {h['total_questions']}개 | 획득 점수: {h['score']}점")
+
+    def main_menu(self):
+        while True:
+            print("\n" + "="*30)
+            print("   컴퓨터 하드웨어 퀴즈 게임")
+            print("="*30)
             print("1. 퀴즈 풀기")
             print("2. 퀴즈 추가")
-            print("3. 퀴즈 목록")
-            print("4. 점수 확인")
-            print("5. 종료")
-            print("========================================")
-            
-            choice = self.safe_input_int("선택: ", 1, 5)
-            
-            if choice == 1:
+            print("3. 퀴즈 목록 보기")
+            print("4. 퀴즈 삭제")
+            print("5. 점수 및 기록 확인")
+            print("6. 종료")
+            print("="*30)
+
+            choice = input("메뉴 번호를 선택하세요 (1~6): ").strip()
+
+            if choice == "1":
                 self.play_quiz()
-            elif choice == 2:
+            elif choice == "2":
                 self.add_quiz()
-            elif choice == 3:
+            elif choice == "3":
                 self.list_quizzes()
-            elif choice == 4:
-                self.show_score()
-            elif choice == 5:
+            elif choice == "4":
+                self.delete_quiz()
+            elif choice == "5":
+                self.show_score_and_history()
+            elif choice == "6":
                 print("\n게임을 종료합니다. 이용해 주셔서 감사합니다!")
                 break
+            else:
+                print("[!] 올바른 메뉴 번호를 선택해 주세요 (1~6).")
 
 
 if __name__ == "__main__":
     game = QuizGame()
-    game.run()
+    game.main_menu()

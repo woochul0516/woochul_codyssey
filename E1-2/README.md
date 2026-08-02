@@ -146,8 +146,9 @@ E1-2/
 
 | 기능 | 실행 화면 |
 | :--- | :--- |
-| 메인 메뉴 | ![메인 메뉴](images/main_quiz.png) |
+| 메인 메뉴 | ![메인 메뉴](images/menu_quiz.png) |
 | 퀴즈 풀기 | ![퀴즈 풀기](images/solve_quiz.png) |
 | 퀴즈 추가 | ![퀴즈 추가](images/add_quiz.png) |
 | 퀴즈 목록 | ![퀴즈 목록](images/list_quiz.png) |
+| 퀴즈 목록 | ![퀴즈 삭제](images/del_quiz.png) |
 | 점수 확인 | ![점수 확인](images/score_quiz.png) |
