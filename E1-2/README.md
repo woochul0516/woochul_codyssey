@@ -151,8 +151,3 @@ E1-2/
 | 퀴즈 추가 | ![퀴즈 추가](images/add_quiz.png) |
 | 퀴즈 목록 | ![퀴즈 목록](images/list_quiz.png) |
 | 점수 확인 | ![점수 확인](images/score_quiz.png) |
-
-## 7. GitHub 저장소
-
-
-| 커밋 내역 | ![커밋 내역](images/commit.png) |
