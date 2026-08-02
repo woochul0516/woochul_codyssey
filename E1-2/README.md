@@ -56,8 +56,9 @@ Python 기본 문법, 객체지향 프로그래밍(OOP), JSON 파일 입출력�
 E1-2/
 ├── images/             # 실행 결과 스크린샷 폴더
 │   ├── add_quiz.png
+│   ├── del_quiz.png
 │   ├── list_quiz.png
-│   ├── main_quiz.png
+│   ├── menu_quiz.png
 │   ├── score_quiz.png
 │   └── solve_quiz.png
 ├── .gitignore          # Git 추적 제외 설정
