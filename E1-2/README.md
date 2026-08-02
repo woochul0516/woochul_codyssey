@@ -151,3 +151,17 @@ E1-2/
 | 퀴즈 추가 | ![퀴즈 추가](images/add_quiz.png) |
 | 퀴즈 목록 | ![퀴즈 목록](images/list_quiz.png) |
 | 점수 확인 | ![점수 확인](images/score_quiz.png) |
+
+## 7. GitHub 저장소
+
+
+- 커밋 내역
+    - jung@MyHomeui-MacBookAir woochul_codyssey % git add . && git commit -m "README 초안" && git push origin main
+
+    - git add . && git commit -m "README VER1" && git push origin main
+
+    - git add . && git commit -m "스키마 예시 수정" && git push origin main
+
+    - git add . && git commit -m "사진 추가" && git push origin main
+
+    - git add . && git commit -m "README VER2" && git push origin main
