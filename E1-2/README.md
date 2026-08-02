@@ -155,23 +155,4 @@ E1-2/
 ## 7. GitHub 저장소
 
 
-- 커밋 내역
-    - git add . && git commit -m "README 초안" && git push origin main
-
-    - git add . && git commit -m "README VER1" && git push origin main
-
-    - git add . && git commit -m "스키마 예시 수정" && git push origin main
-
-    - git add . && git commit -m "사진 추가" && git push origin main
-
-    - git add . && git commit -m "README VER2" && git push origin main
-
-    - git add . && git commit -m "bash 수정" && git push origin main
-
-    - git add . && git commit -m "주요 기능 목록 수정" && git push origin main
-
-    - git add . && git commit -m "사진 표 추가" && git push origin main
-
-    - git add . && git commit -m "프로젝트 파일 구조 수정" && git push origin main
-
-    - git add . && git commit -m ".gitignore 수정 및 최종본" && git push origin main
+| 커밋 내역 | ![커밋 내역](images/commit.png) |
