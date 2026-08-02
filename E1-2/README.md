@@ -50,6 +50,7 @@ Ctrl+C (KeyboardInterrupt) 및 파일 손상 발생 시 안전 종료 및 기본
 
 ## 4. 프로젝트 파일 구조
 
+```text
 E1-2/
 ├── images/             # 실행 결과 스크린샷 폴더
 │   ├── menu.png
@@ -78,6 +79,7 @@ answer (Integer): 정답 번호 (1~4)
 best_score (Integer): 현재까지 기록된 최고 정답 문제 수
 
 스키마 예시:
+```bash
 {
     "quizzes": [
         {
@@ -93,3 +95,5 @@ best_score (Integer): 현재까지 기록된 최고 정답 문제 수
     ],
     "best_score": 5
 }
+
+## 6. 실행 화면 스크린샷
