@@ -165,3 +165,5 @@ E1-2/
     - git add . && git commit -m "사진 추가" && git push origin main
 
     - git add . && git commit -m "README VER2" && git push origin main
+
+    - git add . && git commit -m "bash 수정" && git push origin main
