@@ -19,10 +19,12 @@ Python 기본 문법, 객체지향 프로그래밍(OOP), JSON 파일 입출력�
 1. **프로젝트 디렉토리 이동**:
    ```bash
    cd WOOCHUL_CODYSSEY/E1-2
+   ```
 
 2. **프로그램 실행**:
    ```bash
    python3 main.py
+   ```
 
 ---
 
@@ -98,5 +100,14 @@ E1-2/
     ],
     "best_score": 5
 }
+```
 
 ## 6. 실행 화면 스크린샷
+
+| 기능 | 실행 화면 |
+| :--- | :--- |
+| 메인 메뉴 | ![메인 메뉴](images/main_quiz.png) |
+| 퀴즈 풀기 | ![퀴즈 풀기](images/solve_quiz.png) |
+| 퀴즈 추가 | ![퀴즈 추가](images/add_quiz.png) |
+| 퀴즈 목록 | ![퀴즈 목록](images/list_quiz.png) |
+| 점수 확인 | ![점수 확인](images/score_quiz.png) |

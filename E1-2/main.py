@@ -40,14 +40,34 @@ class QuizGame:
         self.load_state()
 
     def get_default_quizzes(self):
-        """기본 제공 퀴즈 데이터 (주제: 파이썬 & 프로그래밍 기초)"""
-        return [
-            Quiz("Python의 창시자는 누구일까요?", ["Guido van Rossum", "Linus Torvalds", "James Gosling", "Bjarne Stroustrup"], 1),
-            Quiz("다음 중 순서가 보장되고 변경 불가능(immutable)한 파이썬 자료형은?", ["list", "dict", "tuple", "set"], 3),
-            Quiz("JSON 파일 기본 인코딩으로 표준 권장되는 형식은?", ["EUC-KR", "UTF-8", "CP949", "ASCII"], 2),
-            Quiz("Git에서 브랜치를 생성함과 동시에 이동하는 명령어로 올바른 것은?", ["git branch -m", "git checkout -b", "git commit -a", "git merge -b"], 2),
-            Quiz("파이썬에서 예외 처리를 위해 사용하는 블록 키워드는?", ["try/except", "do/catch", "try/catch", "begin/end"], 1),
-        ]
+            """기본 제공 퀴즈 데이터 (주제: 컴퓨터 하드웨어 기초)"""
+            return [
+                Quiz(
+                    "컴퓨터의 '뇌' 역할을 하며 연산과 명령을 처리하는 핵심 하드웨어 장치는?",
+                    ["RAM (메모리)", "CPU (중앙처리장치)", "SSD (보조기억장치)", "GPU (그래픽카드)"],
+                    2
+                ),
+                Quiz(
+                    "전원이 꺼지면 저장된 데이터가 사라지는 '휘발성' 기억장치는?",
+                    ["RAM", "HDD", "SSD", "ROM"],
+                    1
+                ),
+                Quiz(
+                    "컴퓨터가 사용하는 2진법에서 0과 1의 최소 데이터 단위를 무엇이라고 할까요?",
+                    ["Byte", "Bit", "KB", "Word"],
+                    2
+                ),
+                Quiz(
+                    "CPU, 메모리, 그래픽카드 등 컴퓨터의 모든 부품을 연결하는 메인 회로 기판은?",
+                    ["파워 서플라이", "메인보드 (마더보드)", "랜카드", "사운드 카드"],
+                    2
+                ),
+                Quiz(
+                    "다음 중 비휘발성 저장장치로 물리적 회전 디스크 대신 반도체를 사용하는 보조기억장치는?",
+                    ["RAM", "HDD", "SSD", "CD-ROM"],
+                    3
+                )
+            ]
 
     def load_state(self):
         """state.json 파일 읽기 및 예외 복구"""
