@@ -1,0 +1,55 @@
+{
+    "quizzes": [
+        {
+            "question": "Python의 창시자는 누구일까요?",
+            "choices": [
+                "Guido van Rossum",
+                "Linus Torvalds",
+                "James Gosling",
+                "Bjarne Stroustrup"
+            ],
+            "answer": 1
+        },
+        {
+            "question": "다음 중 순서가 보장되고 변경 불가능(immutable)한 파이썬 자료형은?",
+            "choices": [
+                "list",
+                "dict",
+                "tuple",
+                "set"
+            ],
+            "answer": 3
+        },
+        {
+            "question": "JSON 파일 기본 인코딩으로 표준 권장되는 형식은?",
+            "choices": [
+                "EUC-KR",
+                "UTF-8",
+                "CP949",
+                "ASCII"
+            ],
+            "answer": 2
+        },
+        {
+            "question": "Git에서 브랜치를 생성함과 동시에 이동하는 명령어로 올바른 것은?",
+            "choices": [
+                "git branch -m",
+                "git checkout -b",
+                "git commit -a",
+                "git merge -b"
+            ],
+            "answer": 2
+        },
+        {
+            "question": "파이썬에서 예외 처리를 위해 사용하는 블록 키워드는?",
+            "choices": [
+                "try/except",
+                "do/catch",
+                "try/catch",
+                "begin/end"
+            ],
+            "answer": 1
+        }
+    ],
+    "best_score": 4
+}
