@@ -1,4 +1,5 @@
 import json
+import os
 import random
 from datetime import datetime
 
@@ -28,8 +29,14 @@ class Quiz:
 
 
 class QuizGame:
-    def __init__(self, filepath="state.json"):
-        self.filepath = filepath
+    def __init__(self, folder_path="E1-2", filename="state.json"):
+        # E1-2 폴더 경로 설정 및 없으면 자동 생성
+        self.folder_path = folder_path
+        self.filepath = os.path.join(self.folder_path, filename)
+        
+        if not os.path.exists(self.folder_path):
+            os.makedirs(self.folder_path, exist_ok=True)
+
         self.quizzes = []
         self.best_score = 0.0
         self.history = []
@@ -76,7 +83,6 @@ class QuizGame:
                 data = json.load(f)
                 loaded_quizzes = [Quiz.from_dict(q) for q in data.get("quizzes", [])]
                 
-                # 파일에 퀴즈가 있으면 로드, 비어있으면 기본 퀴즈 5개 설정
                 if loaded_quizzes:
                     self.quizzes = loaded_quizzes
                 else:
@@ -85,13 +91,16 @@ class QuizGame:
                 self.best_score = float(data.get("best_score", 0.0))
                 self.history = data.get("history", [])
         except (FileNotFoundError, json.JSONDecodeError):
-            # 파일이 아예 없거나 깨진 경우 기본 데이터로 초기화 후 자동 저장
             self.quizzes = self.get_default_quizzes()
             self.best_score = 0.0
             self.history = []
             self.save_data()
 
     def save_data(self):
+        # 저장 시 디렉토리가 존재하는지 한 번 더 확인
+        if not os.path.exists(self.folder_path):
+            os.makedirs(self.folder_path, exist_ok=True)
+
         data = {
             "quizzes": [q.to_dict() for q in self.quizzes],
             "best_score": self.best_score,
@@ -107,7 +116,6 @@ class QuizGame:
 
         print(f"\n--- 퀴즈 풀기 (총 {len(self.quizzes)}문제 보유) ---")
         
-        # [보너스] 푼 문제 수 선택
         while True:
             try:
                 count_input = input(f"풀고 싶은 문제 수를 입력하세요 (1~{len(self.quizzes)}): ").strip()
@@ -118,7 +126,6 @@ class QuizGame:
             except ValueError:
                 print("[!] 올바른 숫자를 입력해주세요.")
 
-        # [보너스] 문제 랜덤 섞기
         selected_quizzes = random.sample(self.quizzes, quiz_count)
         current_score = 0.0
 
@@ -132,7 +139,6 @@ class QuizGame:
             while True:
                 user_input = input("정답 번호(1~4) 또는 H를 입력하세요: ").strip().upper()
                 
-                # [보너스] 힌트 보기
                 if user_input == 'H':
                     if not hint_used:
                         print(f"  💡 [힌트] {quiz.hint}")
@@ -144,7 +150,6 @@ class QuizGame:
                 if user_input.isdigit() and 1 <= int(user_input) <= len(quiz.choices):
                     user_ans = int(user_input)
                     if user_ans == quiz.answer:
-                        # [보너스] 힌트 사용 시 점수 차감 (1점 -> 0.5점)
                         gained_score = 0.5 if hint_used else 1.0
                         current_score += gained_score
                         print(f"⭕ 정답입니다! (+{gained_score}점)")
@@ -156,12 +161,10 @@ class QuizGame:
 
         print(f"\n[결과] 총 {quiz_count}문제 중 {current_score}점을 획득하셨습니다!")
 
-        # 최고 점수 갱신
         if current_score > self.best_score:
             print(f"🎉 축하합니다! 새로운 최고 점수 달성! ({self.best_score}점 -> {current_score}점)")
             self.best_score = current_score
 
-        # [보너스] 점수 기록 히스토리 저장
         record = {
             "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "total_questions": quiz_count,
@@ -192,7 +195,6 @@ class QuizGame:
             except ValueError:
                 print("[!] 올바른 숫자를 입력해주세요.")
 
-        # [보너스] 힌트 입력 속성
         hint = input("힌트를 입력하세요 (없으면 엔터): ").strip()
         if not hint:
             hint = "힌트가 제공되지 않는 문제입니다."
@@ -215,7 +217,6 @@ class QuizGame:
             print(f"    정답: {quiz.answer}번 | 힌트: {quiz.hint}")
 
     def delete_quiz(self):
-        # [보너스] 퀴즈 삭제 기능
         self.list_quizzes()
         if not self.quizzes:
             return
@@ -238,7 +239,6 @@ class QuizGame:
                 print("[!] 숫자를 입력해주세요.")
 
     def show_score_and_history(self):
-        # [보너스] 최고 점수 및 히스토리 출력
         print("\n--- 점수 및 게임 기록 ---")
         print(f"🏆 최고 점수: {self.best_score}점")
         print("\n[최근 게임 기록]")
