@@ -169,3 +169,5 @@ E1-2/
     - git add . && git commit -m "bash 수정" && git push origin main
 
     - git add . && git commit -m "주요 기능 목록 수정" && git push origin main
+
+    - git add . && git commit -m "사진 표 추가" && git push origin main
