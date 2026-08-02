@@ -83,6 +83,7 @@ E1-2/
         - choices (Array of Strings): 4개의 객관식 선택지
         - answer (Integer): 정답 번호 (1~4)
     - best_score (Integer): 현재까지 기록된 최고 정답 문제 수
+    - history (Array): 각 게임 회차별 기록
 
 스키마 예시:
 ```bash
