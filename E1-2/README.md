@@ -156,7 +156,7 @@ E1-2/
 
 
 - 커밋 내역
-    - jung@MyHomeui-MacBookAir woochul_codyssey % git add . && git commit -m "README 초안" && git push origin main
+    - git add . && git commit -m "README 초안" && git push origin main
 
     - git add . && git commit -m "README VER1" && git push origin main
 
@@ -167,3 +167,5 @@ E1-2/
     - git add . && git commit -m "README VER2" && git push origin main
 
     - git add . && git commit -m "bash 수정" && git push origin main
+
+    - git add . && git commit -m "주요 기능 목록 수정" && git push origin main
