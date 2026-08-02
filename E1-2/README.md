@@ -55,11 +55,11 @@ Python 기본 문법, 객체지향 프로그래밍(OOP), JSON 파일 입출력�
 ```text
 E1-2/
 ├── images/             # 실행 결과 스크린샷 폴더
-│   ├── menu.png
-│   ├── play.png
 │   ├── add_quiz.png
-│   ├── list.png
-│   └── score.png
+│   ├── list_quiz.png
+│   ├── main_quiz.png
+│   ├── score_quiz.png
+│   └── solve_quiz.png
 ├── .gitignore          # Git 추적 제외 설정
 ├── README.md           # 프로젝트 문서화 파일
 ├── state.json          # 퀴즈 및 점수 데이터 저장소 (자동 생성)
@@ -171,3 +171,5 @@ E1-2/
     - git add . && git commit -m "주요 기능 목록 수정" && git push origin main
 
     - git add . && git commit -m "사진 표 추가" && git push origin main
+
+    - git add . && git commit -m "프로젝트 파일 구조 수정" && git push origin main
