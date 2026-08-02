@@ -173,3 +173,5 @@ E1-2/
     - git add . && git commit -m "사진 표 추가" && git push origin main
 
     - git add . && git commit -m "프로젝트 파일 구조 수정" && git push origin main
+
+    - git add . && git commit -m ".gitignore 수정 및 최종본" && git push origin main
