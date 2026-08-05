@@ -518,11 +518,9 @@ branch.main.vscode-merge-base=origin/main
 해결 방안 : 해당 화면에서 EOF를 입력 후 Enter 키 입력 시 해결 가능. 추후 'cat Dockerfile'을 입력하여 정상적으로 생성되었는지도 확인 가능
 
 #### 6.2. echo 에러
-- 문제 : ```text
-'echo "<h1>Updated via Bind Mount!</h1>" > app/index.html' 입력시 'zsh: event not found: </h1>'가 뜨며 에러가 발생함.
+- `문제 : 'echo "<h1>Updated via Bind Mount!</h1>" > app/index.html' 입력시 'zsh: event not found: </h1>'가 뜨며 에러가 발생함.`
 
-- 해결 방안 : ```text
-! 문자가 쉘 해석기에 걸리지 않도록 작은따옴표(')로 문장을 감싸서 실행하시면 깔끔하게 해결됨. zsh 쉘에서 " 안에 !</h1>이 들어있어서 이를 명령어 히스토리 이벤트로 해석하려고 하여 발생한 에러.
+- 해결 방안 : ! 문자가 쉘 해석기에 걸리지 않도록 작은따옴표(')로 문장을 감싸서 실행하시면 깔끔하게 해결됨. zsh 쉘에서 " 안에 !</h1>이 들어있어서 이를 명령어 히스토리 이벤트로 해석하려고 하여 발생한 에러.
 
 ---
 
