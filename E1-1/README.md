@@ -36,8 +36,8 @@ E1-1/
 │   ├── app/
 │   │   └── index.html
 │   ├── images/
-│   │   ├── localhost_8081_1.png
-│   │   └── localhost_8081_2.png
+│   │   ├── localhost_8080.png
+│   │   └── localhost_8081.png
 │   ├── perm_dir/
 │   ├── Dockerfile
 │   ├── perm_file.txt
