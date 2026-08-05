@@ -1,18 +1,18 @@
 # 내 컴퓨터에 개발자용 '작업실' 꾸미기
 
 ## 1. 프로젝트 개요
-본 프로젝트는 개발의 시작점인 터미널 CLI 환경, Docker 컨테이너 기술, Git/GitHub 버전 관리 체계를 손수 구축하고 검증하는 과정입니다. 
-"내 컴퓨터에서만 동작하는 문제(It works on my machine)"를 방지하고, 서비스의 재현 가능성(Reproducibility)과 환경 격리(Isolation)를 보장할 수 있는 개발 워크스테이션 환경을 조성하는 것을 목표로 합니다.
-특히, 서울캠퍼스 시스템 제한 환경(`sudo` 사용 제한)을 고려하여 **OrbStack** 기반의 비권한 컨테이너 실행 환경을 구축하고 실습을 진행하였습니다.
+`본 프로젝트는 개발의 시작점인 터미널 CLI 환경, Docker 컨테이너 기술, Git/GitHub 버전 관리 체계를 손수 구축하고 검증하는 과정입니다. `
+`"내 컴퓨터에서만 동작하는 문제(It works on my machine)"를 방지하고, 서비스의 재현 가능성(Reproducibility)과 환경 격리(Isolation)를 보장할 수 있는 개발 워크스테이션 환경을 조성하는 것을 목표로 합니다.`
+`특히, 서울캠퍼스 시스템 제한 환경(`sudo` 사용 제한)을 고려하여 **OrbStack** 기반의 비권한 컨테이너 실행 환경을 구축하고 실습을 진행하였습니다.`
 
 ---
 
 ## 2. 실행 환경
-- **OS**: macOS [버전 기록, 예: Sonoma 14.5 (Apple Silicon)]
-- **Container Runtime Environment**: OrbStack (Non-sudo Docker Engine Provider)
-- **Shell / Terminal**: Zsh / macOS Terminal
-- **Docker Version**: Docker version 26.x.x (OrbStack Engine)
-- **Git Version**: git version 2.x.x
+- `**OS**: macOS [버전 기록, 예: Sonoma 14.5 (Apple Silicon)]`
+- `**Container Runtime Environment**: OrbStack (Non-sudo Docker Engine Provider)`
+- `**Shell / Terminal**: Zsh / macOS Terminal`
+- `**Docker Version**: Docker version 26.x.x (OrbStack Engine)`
+- `**Git Version**: git version 2.x.x`
 
 ---
 
@@ -50,7 +50,7 @@ E1-1/
 ## 5. 수행 및 검증 로그
 
 ### 5.1. 터미널 조작 및 권한 관리
-터미널 명령어 기반의 파일 생성, 이동, 복사, 삭제 및 권한 체계(`r/w/x`) 실습 결과입니다.
+`터미널 명령어 기반의 파일 생성, 이동, 복사, 삭제 및 권한 체계(`r/w/x`) 실습 결과입니다.`
 
 - 현재 위치 확인 및 디렉토리 생성/이동
 ```bash
@@ -96,7 +96,7 @@ drwx------  2 jung  staff  64  8월  5 16:52 perm_dir
 ```
 
 ### 5.2. Docker 점검 및 기본 컨테이너 운용
-OrbStack을 활용하여 sudo 없이 Docker 데몬을 정상 호출합니다.
+`OrbStack을 활용하여 sudo 없이 Docker 데몬을 정상 호출합니다.`
 
 - 버전 및 데몬 상태 점검
 ```bash
@@ -315,9 +315,9 @@ index.html
 ```
 
 - 개념 정리
-    - docker attach: 컨테이너의 Standard Input/Output/Error(PID 1 메인 프로세스)에 직접 연결됩니다. 터미널을 종료하면 메인 프로세스에 영향을 주어 컨테이너가 멈출 수 있습니다.
+    - `docker attach: 컨테이너의 Standard Input/Output/Error(PID 1 메인 프로세스)에 직접 연결됩니다. 터미널을 종료하면 메인 프로세스에 영향을 주어 컨테이너가 멈출 수 있습니다.`
 
-    - docker exec: 이미 실행 중인 컨테이너 내부에서 새로운 별도의 프로세스를 추가로 실행합니다. 디버깅 및 작업 시 기존 실행 환경을 방해하지 않고 독립적으로 명령을 수행할 수 있습니다.
+    - `docker exec: 이미 실행 중인 컨테이너 내부에서 새로운 별도의 프로세스를 추가로 실행합니다. 디버깅 및 작업 시 기존 실행 환경을 방해하지 않고 독립적으로 명령을 수행할 수 있습니다.`
 
 ### 5.3. Dockerfile 기반 커스텀 웹 서버
 - Dockerfile 작성 (Nginx 베이스)
@@ -401,7 +401,7 @@ jung@MyHomeui-MacBookAir practice % curl http://localhost:8080
 
 ### 5.4. 바인드 마운트 및 볼륨 영속성 검증
 #### A. 바인드 마운트 (Bind Mount) - 변경사항 실시간 반영
-호스트의 app/ 디렉토리를 컨테이너 내부 /usr/share/nginx/html에 바인드 마운트하여 실시간 코드 수정을 검증했습니다.
+`호스트의 app/ 디렉토리를 컨테이너 내부 /usr/share/nginx/html에 바인드 마운트하여 실시간 코드 수정을 검증했습니다.`
 
 - 바인드 마운트 실습 (호스트의 app 폴더를 컨테이너에 실시간 연결)
 ```bash
@@ -441,7 +441,7 @@ jung@MyHomeui-MacBookAir practice % curl http://localhost:8081
 ```
 
 #### B. Docker Volume - 데이터 영속성(Persistence) 검증
-컨테이너가 파기되더라도 Docker 볼륨 내 저장된 데이터는 유실되지 않음을 검증했습니다.
+`컨테이너가 파기되더라도 Docker 볼륨 내 저장된 데이터는 유실되지 않음을 검증했습니다.`
 
 - 볼륨 생성
 ```bash
@@ -458,7 +458,7 @@ jung@MyHomeui-MacBookAir practice % docker exec vol-container-1 cat /data/persis
 Persistent Data Saved
 ```
 
--컨테이너 1 강제 삭제
+- 컨테이너 1 강제 삭제
 ```bash
 jung@MyHomeui-MacBookAir practice % docker rm -f vol-container-1
 vol-container-1
@@ -511,48 +511,35 @@ branch.main.vscode-merge-base=origin/main
 
 ### 6. 트러블슈팅 (Troubleshooting)
 #### 6.1. EOF 사용법 미숙지
-- ```text
-문제 : 'cat << 'EOF' > Dockerfile' 를 입력시 하고자 하는 명령어들을 입력해도 'heredoc>'가 떠서 기존 터미널로 돌아가지 못하는 상황이 발생.
+- `문제 : 'cat << 'EOF' > Dockerfile' 를 입력시 하고자 하는 명령어들을 입력해도 'heredoc>'가 떠서 기존 터미널로 돌아가지 못하는 상황이 발생.`
 
-- ```text
-해결 방안 : 해당 화면에서 EOF를 입력 후 Enter 키 입력 시 해결 가능. 추후 'cat Dockerfile'을 입력하여 정상적으로 생성되었는지도 확인 가능
+- `해결 방안 : 해당 화면에서 EOF를 입력 후 Enter 키 입력 시 해결 가능. 추후 'cat Dockerfile'을 입력하여 정상적으로 생성되었는지도 확인 가능`
 
 #### 6.2. echo 에러
 - `문제 : 'echo "<h1>Updated via Bind Mount!</h1>" > app/index.html' 입력시 'zsh: event not found: </h1>'가 뜨며 에러가 발생함.`
 
-- 해결 방안 : ! 문자가 쉘 해석기에 걸리지 않도록 작은따옴표(')로 문장을 감싸서 실행하시면 깔끔하게 해결됨. zsh 쉘에서 " 안에 !</h1>이 들어있어서 이를 명령어 히스토리 이벤트로 해석하려고 하여 발생한 에러.
+- `해결 방안 : ! 문자가 쉘 해석기에 걸리지 않도록 작은따옴표(')로 문장을 감싸서 실행하시면 깔끔하게 해결됨. zsh 쉘에서 " 안에 !</h1>이 들어있어서 이를 명령어 히스토리 이벤트로 해석하려고 하여 발생한 에러.`
 
 ---
 
 ### 7. 과제 학습 목표 정리
 #### 7.1. 절대 경로 vs 상대 경로
-- ```text
-절대 경로: 최상위 루트 디렉토리(/)부터 시작하는 전체 경로 (예: /usr/share/nginx/html). 현재 작업 위치와 무관하게 항상 동일한 위치를 지칭합니다.
-- ```text
-상대 경로: 현재 위치(.) 기준의 경로 (예: ./app/index.html 또는 ../config). 실행 위치에 따라 가리키는 대상이 변합니다.
+- `절대 경로: 최상위 루트 디렉토리(/)부터 시작하는 전체 경로 (예: /usr/share/nginx/html). 현재 작업 위치와 무관하게 항상 동일한 위치를 지칭합니다.`
+- `상대 경로: 현재 위치(.) 기준의 경로 (예: ./app/index.html 또는 ../config). 실행 위치에 따라 가리키는 대상이 변합니다.`
 
 #### 7.2. 파일 권한(r/w/x)과 8진수 표기(755, 644)
-- ```text
-r(Read=4), w(Write=2), x(Execute=1)의 합산으로 [소유자/그룹/기타] 권한을 결정합니다.
-- ```text
-755 (rwxr-xr-x): 소유자는 읽기/쓰기/실행(4+2+1=7) 가능, 그룹 및 기타 사용자는 읽기/실행(4+1=5)만 가능. (디렉토리 및 실행파일 기본값)
-- ```text
-644 (rw-r--r--): 소유자는 읽기/쓰기(4+2=6) 가능, 그룹 및 기타 사용자는 읽기(4)만 가능. (일반 문서 파일 기본값)
+- `r(Read=4), w(Write=2), x(Execute=1)의 합산으로 [소유자/그룹/기타] 권한을 결정합니다.`
+- `755 (rwxr-xr-x): 소유자는 읽기/쓰기/실행(4+2+1=7) 가능, 그룹 및 기타 사용자는 읽기/실행(4+1=5)만 가능. (디렉토리 및 실행파일 기본값)`
+- `644 (rw-r--r--): 소유자는 읽기/쓰기(4+2=6) 가능, 그룹 및 기타 사용자는 읽기(4)만 가능. (일반 문서 파일 기본값)`
 
 #### 7.3. 포트 매핑(-p <host_port>:<container_port>)이 필요한 이유
-- ```text
-Docker 컨테이너는 호스트 및 다른 컨테이너와 격리된 자체 가상 IP 네트워크를 가집니다.
-- ```text
-외부(호스트 웹 브라우저 등)에서 컨테이너 내부의 서비스(예: Nginx 80 포트)에 접근하려면, 호스트 PC의 특정 포트(예: 8080)로 들어오는 요청을 컨테이너 포트로 전달해 주는 포트 바인딩/포워딩 설정이 반드시 필요합니다.
+- `Docker 컨테이너는 호스트 및 다른 컨테이너와 격리된 자체 가상 IP 네트워크를 가집니다.`
+- `외부(호스트 웹 브라우저 등)에서 컨테이너 내부의 서비스(예: Nginx 80 포트)에 접근하려면, 호스트 PC의 특정 포트(예: 8080)로 들어오는 요청을 컨테이너 포트로 전달해 주는 포트 바인딩/포워딩 설정이 반드시 필요합니다.`
 
 #### 7.4. Docker 볼륨(Volume)과 영속 데이터
-- ```text
-컨테이너는 "무상태(Stateless)"를 지향하므로, 컨테이너가 삭제되면 내부 계층에 쓰여진 모든 데이터가 사라집니다.
-- ```text
-데이터를 영구히 보존하기 위해 Docker가 관리하는 호스트 파일시스템의 특정 영역을 컨테이너 마운트 포인트에 연결하는 기술이 Docker Volume입니다. 이를 통해 컨테이너의 Lifecycle과 데이터의 Lifecycle을 분리(Decoupling)할 수 있습니다.
+- `컨테이너는 "무상태(Stateless)"를 지향하므로, 컨테이너가 삭제되면 내부 계층에 쓰여진 모든 데이터가 사라집니다.`
+- `데이터를 영구히 보존하기 위해 Docker가 관리하는 호스트 파일시스템의 특정 영역을 컨테이너 마운트 포인트에 연결하는 기술이 Docker Volume입니다. 이를 통해 컨테이너의 Lifecycle과 데이터의 Lifecycle을 분리(Decoupling)할 수 있습니다.`
 
 #### 7.5. Git vs GitHub의 역할 차이
-- ```text
-Git: 로컬 컴퓨터에서 소스코드의 변경 이력을 추적하고 버전을 관리하는 분산 버전 관리 시스템(DVCS) 소프트웨어입니다.
-- ```text
-GitHub: Git으로 관리되는 프로젝트를 클라우드에 저장하고, 팀원 간의 코드 공유, Pull Request, 이슈 트래킹, CI/CD 등을 제공하는 원격 저장소 웹 호스팅 플랫폼입니다.
+- `Git: 로컬 컴퓨터에서 소스코드의 변경 이력을 추적하고 버전을 관리하는 분산 버전 관리 시스템(DVCS) 소프트웨어입니다.`
+- `GitHub: Git으로 관리되는 프로젝트를 클라우드에 저장하고, 팀원 간의 코드 공유, Pull Request, 이슈 트래킹, CI/CD 등을 제공하는 원격 저장소 웹 호스팅 플랫폼입니다.`
