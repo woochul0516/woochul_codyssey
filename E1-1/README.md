@@ -95,7 +95,7 @@ drwx------  2 jung  staff  64  8월  5 16:52 perm_dir
 -rw-r--r--  1 jung  staff   0  8월  5 16:52 perm_file.txt
 ```
 
-#### 4.2. Docker 점검 및 기본 컨테이너 운용
+### 5.2. Docker 점검 및 기본 컨테이너 운용
 OrbStack을 활용하여 sudo 없이 Docker 데몬을 정상 호출합니다.
 
 - 버전 및 데몬 상태 점검
@@ -288,12 +288,6 @@ CONTAINER ID   NAME        CPU %     MEM USAGE / LIMIT     MEM %     NET I/O    
 5cadf0e64c84   my-ubuntu   0.00%     2.203MiB / 7.818GiB   0.03%     1.13kB / 126B   16.2MB / 0B   1
 ```
 
-- 개념 정리
-    - docker attach: 컨테이너의 Standard Input/Output/Error(PID 1 메인 프로세스)에 직접 연결됩니다. 터미널을 종료하면 메인 프로세스에 영향을 주어 컨테이너가 멈출 수 있습니다.
-
-    - docker exec: 이미 실행 중인 컨테이너 내부에서 새로운 별도의 프로세스를 추가로 실행합니다. 디버깅 및 작업 시 기존 실행 환경을 방해하지 않고 독립적으로 명령을 수행할 수 있습니다.
-
-#### 3. 커스텀 웹 서버 빌드 및 포트 매핑 실습
 - 프로젝트 폴더 세팅
 ```bash
 jung@MyHomeui-MacBookAir practice % mkdir -p app
@@ -320,6 +314,12 @@ jung@MyHomeui-MacBookAir practice % ls app
 index.html
 ```
 
+- 개념 정리
+    - docker attach: 컨테이너의 Standard Input/Output/Error(PID 1 메인 프로세스)에 직접 연결됩니다. 터미널을 종료하면 메인 프로세스에 영향을 주어 컨테이너가 멈출 수 있습니다.
+
+    - docker exec: 이미 실행 중인 컨테이너 내부에서 새로운 별도의 프로세스를 추가로 실행합니다. 디버깅 및 작업 시 기존 실행 환경을 방해하지 않고 독립적으로 명령을 수행할 수 있습니다.
+
+### 5.3. Dockerfile 기반 커스텀 웹 서버
 - Dockerfile 작성 (Nginx 베이스)
 ```bash
 jung@MyHomeui-MacBookAir practice % cat << 'EOF' > Dockerfile
@@ -399,7 +399,10 @@ jung@MyHomeui-MacBookAir practice % curl http://localhost:8080
 </html>
 ```
 
-#### 4. 바인드 마운트 & Docker 볼륨 영속성 실습
+### 5.4. 바인드 마운트 및 볼륨 영속성 검증
+#### A. 바인드 마운트 (Bind Mount) - 변경사항 실시간 반영
+호스트의 app/ 디렉토리를 컨테이너 내부 /usr/share/nginx/html에 바인드 마운트하여 실시간 코드 수정을 검증했습니다.
+
 - 바인드 마운트 실습 (호스트의 app 폴더를 컨테이너에 실시간 연결)
 ```bash
 jung@MyHomeui-MacBookAir practice % docker run -d -p 8081:80 --name web-bind -v $(pwd)/app:/usr/share/nginx/html nginx:alpine
@@ -437,7 +440,9 @@ jung@MyHomeui-MacBookAir practice % curl http://localhost:8081
 <h1>Updated via Bind Mount!</h1>
 ```
 
-- Docker 볼륨 영속성 검증
+#### B. Docker Volume - 데이터 영속성(Persistence) 검증
+컨테이너가 파기되더라도 Docker 볼륨 내 저장된 데이터는 유실되지 않음을 검증했습니다.
+
 - 볼륨 생성
 ```bash
 jung@MyHomeui-MacBookAir practice % docker volume create my-app-data
@@ -473,7 +478,7 @@ jung@MyHomeui-MacBookAir practice % docker rm -f vol-container-2
 vol-container-2
 ```
 
-#### 5. Git 설정 점검
+### 5.5. Git 설정 및 GitHub/VSCode 연동
 - Git 사용자 및 기본 브랜치 설정
 ```bash
 jung@MyHomeui-MacBookAir practice % git config --global user.name "woochul0516"
@@ -501,3 +506,40 @@ branch.main.remote=origin
 branch.main.merge=refs/heads/main
 branch.main.vscode-merge-base=origin/main
 ```
+
+---
+
+### 6. 트러블슈팅 (Troubleshooting)
+#### 6.1. EOF 사용법 미숙지
+- 문제 : 'cat << 'EOF' > Dockerfile' 를 입력시 하고자 하는 명령어들을 입력해도 'heredoc>'가 떠서 기존 터미널로 돌아가지 못하는 상황이 발생.
+
+- 해결 방안 : 해당 화면에서 EOF를 입력 후 Enter 키 입력 시 해결 가능. 추후 'cat Dockerfile'을 입력하여 정상적으로 생성되었는지도 확인 가능
+
+#### 6.2. echo 에러
+- 문제 : 'echo "<h1>Updated via Bind Mount!</h1>" > app/index.html' 입력시 'zsh: event not found: </h1>'가 뜨며 에러가 발생함.
+
+- 해결 방안 : ! 문자가 쉘 해석기에 걸리지 않도록 작은따옴표(')로 문장을 감싸서 실행하시면 깔끔하게 해결됨. zsh 쉘에서 " 안에 !</h1>이 들어있어서 이를 명령어 히스토리 이벤트로 해석하려고 하여 발생한 에러.
+
+---
+
+### 7. 과제 학습 목표 정리
+#### 7.1. 절대 경로 vs 상대 경로
+- 절대 경로: 최상위 루트 디렉토리(/)부터 시작하는 전체 경로 (예: /usr/share/nginx/html). 현재 작업 위치와 무관하게 항상 동일한 위치를 지칭합니다.
+- 상대 경로: 현재 위치(.) 기준의 경로 (예: ./app/index.html 또는 ../config). 실행 위치에 따라 가리키는 대상이 변합니다.
+
+#### 7.2. 파일 권한(r/w/x)과 8진수 표기(755, 644)
+- r(Read=4), w(Write=2), x(Execute=1)의 합산으로 [소유자/그룹/기타] 권한을 결정합니다.
+- 755 (rwxr-xr-x): 소유자는 읽기/쓰기/실행(4+2+1=7) 가능, 그룹 및 기타 사용자는 읽기/실행(4+1=5)만 가능. (디렉토리 및 실행파일 기본값)
+- 644 (rw-r--r--): 소유자는 읽기/쓰기(4+2=6) 가능, 그룹 및 기타 사용자는 읽기(4)만 가능. (일반 문서 파일 기본값)
+
+#### 7.3. 포트 매핑(-p <host_port>:<container_port>)이 필요한 이유
+- Docker 컨테이너는 호스트 및 다른 컨테이너와 격리된 자체 가상 IP 네트워크를 가집니다.
+- 외부(호스트 웹 브라우저 등)에서 컨테이너 내부의 서비스(예: Nginx 80 포트)에 접근하려면, 호스트 PC의 특정 포트(예: 8080)로 들어오는 요청을 컨테이너 포트로 전달해 주는 포트 바인딩/포워딩 설정이 반드시 필요합니다.
+
+#### 7.4. Docker 볼륨(Volume)과 영속 데이터
+- 컨테이너는 "무상태(Stateless)"를 지향하므로, 컨테이너가 삭제되면 내부 계층에 쓰여진 모든 데이터가 사라집니다.
+- 데이터를 영구히 보존하기 위해 Docker가 관리하는 호스트 파일시스템의 특정 영역을 컨테이너 마운트 포인트에 연결하는 기술이 Docker Volume입니다. 이를 통해 컨테이너의 Lifecycle과 데이터의 Lifecycle을 분리(Decoupling)할 수 있습니다.
+
+#### 7.5. Git vs GitHub의 역할 차이
+- Git: 로컬 컴퓨터에서 소스코드의 변경 이력을 추적하고 버전을 관리하는 분산 버전 관리 시스템(DVCS) 소프트웨어입니다.
+- GitHub: Git으로 관리되는 프로젝트를 클라우드에 저장하고, 팀원 간의 코드 공유, Pull Request, 이슈 트래킹, CI/CD 등을 제공하는 원격 저장소 웹 호스팅 플랫폼입니다.
