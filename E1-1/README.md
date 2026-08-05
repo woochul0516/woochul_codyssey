@@ -8,11 +8,11 @@
 ---
 
 ## 2. 실행 환경
-- `**OS**: macOS [버전 기록, 예: Sonoma 14.5 (Apple Silicon)]`
-- `**Container Runtime Environment**: OrbStack (Non-sudo Docker Engine Provider)`
-- `**Shell / Terminal**: Zsh / macOS Terminal`
-- `**Docker Version**: Docker version 26.x.x (OrbStack Engine)`
-- `**Git Version**: git version 2.x.x`
+- `OS: macOS 26.5.1 arm64`
+- `Container Runtime Environment: OrbStack (Non-sudo Docker Engine Provider)`
+- `Shell / Terminal: Zsh / macOS Terminal`
+- `Docker Version: Docker version 29.4.0 (OrbStack Engine)`
+- `Git Version: git version 2.50.1 (Apple Git-155)`
 
 ---
 
@@ -50,7 +50,7 @@ E1-1/
 ## 5. 수행 및 검증 로그
 
 ### 5.1. 터미널 조작 및 권한 관리
-`터미널 명령어 기반의 파일 생성, 이동, 복사, 삭제 및 권한 체계(`r/w/x`) 실습 결과입니다.`
+`터미널 명령어 기반의 파일 생성, 이동, 복사, 삭제 및 권한 체계(r/w/x) 실습 결과입니다.`
 
 - 현재 위치 확인 및 디렉토리 생성/이동
 ```bash
@@ -398,6 +398,7 @@ jung@MyHomeui-MacBookAir practice % curl http://localhost:8080
 </body>
 </html>
 ```
+![8080 포트 실행 검증](./images/localhost_8080.png)
 
 ### 5.4. 바인드 마운트 및 볼륨 영속성 검증
 #### A. 바인드 마운트 (Bind Mount) - 변경사항 실시간 반영
@@ -439,6 +440,7 @@ jung@MyHomeui-MacBookAir practice % echo '<h1>Updated via Bind Mount!</h1>' > ap
 jung@MyHomeui-MacBookAir practice % curl http://localhost:8081
 <h1>Updated via Bind Mount!</h1>
 ```
+![8081 포트 실행 검증](./images/localhost_8081.png)
 
 #### B. Docker Volume - 데이터 영속성(Persistence) 검증
 `컨테이너가 파기되더라도 Docker 볼륨 내 저장된 데이터는 유실되지 않음을 검증했습니다.`
@@ -511,12 +513,12 @@ branch.main.vscode-merge-base=origin/main
 
 ### 6. 트러블슈팅 (Troubleshooting)
 #### 6.1. EOF 사용법 미숙지
-- `문제 : 'cat << 'EOF' > Dockerfile' 를 입력시 하고자 하는 명령어들을 입력해도 'heredoc>'가 떠서 기존 터미널로 돌아가지 못하는 상황이 발생.`
+- `문제 : "cat << 'EOF' > Dockerfile" 를 입력 시 실행하고자 하는 명령어들을 입력해도 "heredoc>"가 떠서 기존 터미널로 돌아가지 못하는 상황이 발생.`
 
-- `해결 방안 : 해당 화면에서 EOF를 입력 후 Enter 키 입력 시 해결 가능. 추후 'cat Dockerfile'을 입력하여 정상적으로 생성되었는지도 확인 가능`
+- `해결 방안 : 해당 화면에서 "EOF" 입력 후 Enter 키 입력 시 해결 가능. 추후 "cat Dockerfile"을 입력하여 정상적으로 생성되었는지도 확인 `
 
 #### 6.2. echo 에러
-- `문제 : 'echo "<h1>Updated via Bind Mount!</h1>" > app/index.html' 입력시 'zsh: event not found: </h1>'가 뜨며 에러가 발생함.`
+- `문제 : "echo "<h1>Updated via Bind Mount!</h1>" > app/index.html" 입력 시 "zsh: event not found: </h1>"가 뜨며 에러가 발생함.`
 
 - `해결 방안 : ! 문자가 쉘 해석기에 걸리지 않도록 작은따옴표(')로 문장을 감싸서 실행하시면 깔끔하게 해결됨. zsh 쉘에서 " 안에 !</h1>이 들어있어서 이를 명령어 히스토리 이벤트로 해석하려고 하여 발생한 에러.`
 
