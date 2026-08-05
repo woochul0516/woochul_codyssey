@@ -473,7 +473,7 @@ jung@MyHomeui-MacBookAir practice % docker exec vol-container-2 cat /data/persis
 Persistent Data Saved
 ```
 
--테스트 정리
+- 테스트 정리
 ```bash
 jung@MyHomeui-MacBookAir practice % docker rm -f vol-container-2
 vol-container-2
