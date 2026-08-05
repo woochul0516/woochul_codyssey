@@ -82,6 +82,7 @@ drwxr-xr-x  4 jung  staff  128  8월  5 16:44 ..
 
 - 권한 변경 실습 (파일 1개, 디렉토리 1개)
 ```bash
+jung@MyHomeui-MacBookAir practice % echo "Permission Test File" > perm_file.txt
 jung@MyHomeui-MacBookAir practice % mkdir perm_dir
 jung@MyHomeui-MacBookAir practice % ls -ld perm_file.txt perm_dir
 drwxr-xr-x  2 jung  staff  64  8월  5 16:52 perm_dir
