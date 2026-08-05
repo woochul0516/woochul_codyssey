@@ -18,7 +18,7 @@
 
 ### 2.2. 디렉토리 구조 및 파일 역할 (재현성 가이드)
 ```text
-woochul_codyssey/E1-1/
+E1-1/
 ├── practice/
 │   ├── Dockerfile              # Nginx 기반 커스텀 웹 서버 이미지 빌드 명세서
 │   ├── app/
