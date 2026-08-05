@@ -398,7 +398,7 @@ jung@MyHomeui-MacBookAir practice % curl http://localhost:8080
 </body>
 </html>
 ```
-![8080 포트 실행 검증](.practice/images/localhost_8080.png)
+![8080 포트 실행 검증](./practice/images/localhost_8080.png)
 
 ### 5.4. 바인드 마운트 및 볼륨 영속성 검증
 #### A. 바인드 마운트 (Bind Mount) - 변경사항 실시간 반영
@@ -440,7 +440,7 @@ jung@MyHomeui-MacBookAir practice % echo '<h1>Updated via Bind Mount!</h1>' > ap
 jung@MyHomeui-MacBookAir practice % curl http://localhost:8081
 <h1>Updated via Bind Mount!</h1>
 ```
-![8081 포트 실행 검증](.practice/images/localhost_8081.png)
+![8081 포트 실행 검증](./practice/images/localhost_8081.png)
 
 #### B. Docker Volume - 데이터 영속성(Persistence) 검증
 `컨테이너가 파기되더라도 Docker 볼륨 내 저장된 데이터는 유실되지 않음을 검증했습니다.`
