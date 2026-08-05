@@ -1,5 +1,57 @@
-## 1부. 실습 명령어 가이드(터미널에서 직접 실행)
-#### 1. 터미널 조작 및 권한 실습
+# 내 컴퓨터에 개발자용 '작업실' 꾸미기
+
+## 1. 프로젝트 개요
+본 프로젝트는 개발의 시작점인 터미널 CLI 환경, Docker 컨테이너 기술, Git/GitHub 버전 관리 체계를 손수 구축하고 검증하는 과정입니다. 
+"내 컴퓨터에서만 동작하는 문제(It works on my machine)"를 방지하고, 서비스의 재현 가능성(Reproducibility)과 환경 격리(Isolation)를 보장할 수 있는 개발 워크스테이션 환경을 조성하는 것을 목표로 합니다.
+특히, 서울캠퍼스 시스템 제한 환경(`sudo` 사용 제한)을 고려하여 **OrbStack** 기반의 비권한 컨테이너 실행 환경을 구축하고 실습을 진행하였습니다.
+
+---
+
+## 2. 실행 환경
+- **OS**: macOS [버전 기록, 예: Sonoma 14.5 (Apple Silicon)]
+- **Container Runtime Environment**: OrbStack (Non-sudo Docker Engine Provider)
+- **Shell / Terminal**: Zsh / macOS Terminal
+- **Docker Version**: Docker version 26.x.x (OrbStack Engine)
+- **Git Version**: git version 2.x.x
+
+---
+
+## 3. 수행 항목 체크리스트
+- [x] **터미널/권한**: 디렉토리 관리, 파일 조작, `chmod`를 통한 파일/디렉토리 8진수 권한 제어
+- [x] **Docker 설치 및 점검**: OrbStack 기반 `docker --version`, `docker info` 동작 확인
+- [x] **기본 컨테이너 조작**: `hello-world` 실행, `ubuntu` 진입 및 `exec`/`attach` 동작 차이 이해
+- [x] **Dockerfile 커스텀 이미지**: Nginx 베이스 이미지를 활용한 커스텀 웹 서버 빌드
+- [x] **포트 매핑**: `-p 8080:80` 포트 바인딩 및 접속 검증 (`curl` & 브라우저)
+- [x] **바인드 마운트**: 호스트 코드 수정의 실시간 컨테이너 반영 검증
+- [x] **볼륨 영속성**: Docker Volume 생성 및 컨테이너 파기 후 데이터 보존 검증
+- [x] **Git & GitHub 연동**: `git config` 완료 및 VSCode GitHub 인증 연결
+
+---
+
+## 4. 디렉토리 구조 (Directory Tree)
+
+```text
+E1-1/
+├── practice/
+│   ├── app/
+│   │   └── index.html
+│   ├── images/
+│   │   ├── localhost_8081_1.png
+│   │   └── localhost_8081_2.png
+│   ├── perm_dir/
+│   ├── Dockerfile
+│   ├── perm_file.txt
+│   └── renamed_test.txt
+└── README.md
+```
+
+---
+
+## 5. 수행 및 검증 로그
+
+### 5.1. 터미널 조작 및 권한 관리
+터미널 명령어 기반의 파일 생성, 이동, 복사, 삭제 및 권한 체계(`r/w/x`) 실습 결과입니다.
+
 - 현재 위치 확인 및 디렉토리 생성/이동
 ```bash
 jung@MyHomeui-MacBookAir E1-1 % pwd
@@ -43,7 +95,9 @@ drwx------  2 jung  staff  64  8월  5 16:52 perm_dir
 -rw-r--r--  1 jung  staff   0  8월  5 16:52 perm_file.txt
 ```
 
-#### 2. Docker 환경 점검 및 기본 명령(OrbStack 실행 상태)
+#### 4.2. Docker 점검 및 기본 컨테이너 운용
+OrbStack을 활용하여 sudo 없이 Docker 데몬을 정상 호출합니다.
+
 - 버전 및 데몬 상태 점검
 ```bash
 jung@MyHomeui-MacBookAir practice % docker --version
@@ -233,6 +287,11 @@ jung@MyHomeui-MacBookAir practice % docker stats --no-stream
 CONTAINER ID   NAME        CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O     PIDS
 5cadf0e64c84   my-ubuntu   0.00%     2.203MiB / 7.818GiB   0.03%     1.13kB / 126B   16.2MB / 0B   1
 ```
+
+- 개념 정리
+    - docker attach: 컨테이너의 Standard Input/Output/Error(PID 1 메인 프로세스)에 직접 연결됩니다. 터미널을 종료하면 메인 프로세스에 영향을 주어 컨테이너가 멈출 수 있습니다.
+
+    - docker exec: 이미 실행 중인 컨테이너 내부에서 새로운 별도의 프로세스를 추가로 실행합니다. 디버깅 및 작업 시 기존 실행 환경을 방해하지 않고 독립적으로 명령을 수행할 수 있습니다.
 
 #### 3. 커스텀 웹 서버 빌드 및 포트 매핑 실습
 - 프로젝트 폴더 세팅
