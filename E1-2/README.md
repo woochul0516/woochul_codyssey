@@ -58,3 +58,21 @@ macOS / Linux 환경에서는 Python 3 버전에 맞게 `python3 main.py`로 실
     -실행 중 `Ctrl+C`(`KeyboardInterrupt`) 또는 입력 스트림 종료(`EOFError`) 발생 시 트레이스백 오류 없이 안내 메시지를 출력하고, 현재 데이터를 자동 저장한 후 안전하게 종료합니다.
 - 데이터 파일 예외 방지:
     - `state.json` 파일이 없거나 파일이 손상된 경우(`FileNotFoundError`, `JSONDecodeError`), 안내 메시지를 출력한 뒤 기본 퀴즈 데이터 5개로 복구/초기화하여 정상 실행을 보장합니다.
+
+---
+
+## 5. 파일 구조
+```text
+E1-2/
+├── images/
+│   ├── add_quiz.png      # 퀴즈 추가 실행 스크린샷
+│   ├── del_quiz.png      # 퀴즈 삭제 실행 스크린샷
+│   ├── list_quiz.png     # 퀴즈 목록 실행 스크린샷
+│   ├── menu_quiz.png     # 메인 메뉴 실행 스크린샷
+│   ├── score_quiz.png    # 점수 및 기록 확인 스크린샷
+│   └── solve_quiz.png    # 퀴즈 풀기 실행 스크린샷
+├── .gitignore            # Git 추적 제외 파일 설정
+├── main.py               # 메인 소스코드 (Quiz, QuizGame 클래스 구현)
+├── README.md             # 프로젝트 설명 문서
+└── state.json            # 퀴즈, 최고 점수, 플레이 히스토리 저장 파일 (UTF-8)
+```
