@@ -29,12 +29,12 @@ class Quiz:
 
 
 class QuizGame:
-    def __init__(self, folder_path="E1-2", filename="state.json"):
-        # E1-2 폴더 경로 설정 및 없으면 자동 생성
+    # 기본 folder_path를 프로젝트 루트("")로 변경하여 요구사항 준수
+    def __init__(self, folder_path="", filename="state.json"):
         self.folder_path = folder_path
-        self.filepath = os.path.join(self.folder_path, filename)
+        self.filepath = os.path.join(self.folder_path, filename) if self.folder_path else filename
         
-        if not os.path.exists(self.folder_path):
+        if self.folder_path and not os.path.exists(self.folder_path):
             os.makedirs(self.folder_path, exist_ok=True)
 
         self.quizzes = []
@@ -91,14 +91,14 @@ class QuizGame:
                 self.best_score = float(data.get("best_score", 0.0))
                 self.history = data.get("history", [])
         except (FileNotFoundError, json.JSONDecodeError):
+            print("\n[안내] 데이터 파일을 찾을 수 없거나 손상되었습니다. 기본 데이터로 초기화합니다.")
             self.quizzes = self.get_default_quizzes()
             self.best_score = 0.0
             self.history = []
             self.save_data()
 
     def save_data(self):
-        # 저장 시 디렉토리가 존재하는지 한 번 더 확인
-        if not os.path.exists(self.folder_path):
+        if self.folder_path and not os.path.exists(self.folder_path):
             os.makedirs(self.folder_path, exist_ok=True)
 
         data = {
@@ -106,8 +106,11 @@ class QuizGame:
             "best_score": self.best_score,
             "history": self.history
         }
-        with open(self.filepath, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
+        try:
+            with open(self.filepath, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=4)
+        except Exception as e:
+            print(f"\n[!] 데이터 저장 중 오류가 발생했습니다: {e}")
 
     def play_quiz(self):
         if not self.quizzes:
@@ -117,14 +120,12 @@ class QuizGame:
         print(f"\n--- 퀴즈 풀기 (총 {len(self.quizzes)}문제 보유) ---")
         
         while True:
-            try:
-                count_input = input(f"풀고 싶은 문제 수를 입력하세요 (1~{len(self.quizzes)}): ").strip()
+            count_input = input(f"풀고 싶은 문제 수를 입력하세요 (1~{len(self.quizzes)}): ").strip()
+            if count_input.isdigit():
                 quiz_count = int(count_input)
                 if 1 <= quiz_count <= len(self.quizzes):
                     break
-                print(f"[!] 1에서 {len(self.quizzes)} 사이의 숫자를 입력해주세요.")
-            except ValueError:
-                print("[!] 올바른 숫자를 입력해주세요.")
+            print(f"[!] 1에서 {len(self.quizzes)} 사이의 올바른 숫자를 입력해주세요.")
 
         selected_quizzes = random.sample(self.quizzes, quiz_count)
         current_score = 0.0
@@ -187,13 +188,11 @@ class QuizGame:
             choices.append(choice)
 
         while True:
-            try:
-                answer = int(input("정답 번호 (1~4): ").strip())
-                if 1 <= answer <= 4:
-                    break
-                print("[!] 1에서 4 사이의 숫자를 입력해주세요.")
-            except ValueError:
-                print("[!] 올바른 숫자를 입력해주세요.")
+            ans_input = input("정답 번호 (1~4): ").strip()
+            if ans_input.isdigit() and 1 <= int(ans_input) <= 4:
+                answer = int(ans_input)
+                break
+            print("[!] 1에서 4 사이의 올바른 숫자를 입력해주세요.")
 
         hint = input("힌트를 입력하세요 (없으면 엔터): ").strip()
         if not hint:
@@ -223,8 +222,8 @@ class QuizGame:
 
         print("\n--- 퀴즈 삭제 ---")
         while True:
-            try:
-                del_input = input("삭제할 퀴즈 번호를 입력하세요 (취소: 0): ").strip()
+            del_input = input("삭제할 퀴즈 번호를 입력하세요 (취소: 0): ").strip()
+            if del_input.isdigit():
                 del_idx = int(del_input)
                 if del_idx == 0:
                     print("삭제를 취소했습니다.")
@@ -234,9 +233,7 @@ class QuizGame:
                     self.save_data()
                     print(f"✅ [{deleted.question}] 퀴즈가 삭제되었습니다.")
                     return
-                print("[!] 올바른 퀴즈 번호를 입력해주세요.")
-            except ValueError:
-                print("[!] 숫자를 입력해주세요.")
+            print("[!] 올바른 퀴즈 번호를 입력해주세요.")
 
     def show_score_and_history(self):
         print("\n--- 점수 및 게임 기록 ---")
@@ -282,5 +279,12 @@ class QuizGame:
 
 
 if __name__ == "__main__":
-    game = QuizGame()
-    game.main_menu()
+    try:
+        game = QuizGame()
+        game.main_menu()
+    except (KeyboardInterrupt, EOFError):
+        print("\n\n[!] 강제 종료 신호(Ctrl+C / EOF)가 감지되었습니다.")
+        print("안전을 위해 데이터를 저장하고 안전하게 프로그램을 종료합니다.")
+        # 실행 중인 game 인스턴스가 존재할 경우 안전하게 저장 후 종료
+        if 'game' in locals():
+            game.save_data()
