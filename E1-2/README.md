@@ -92,7 +92,7 @@ E1-2/
 │   ├── menu_quiz.png     # 메인 메뉴 실행 스크린샷
 │   ├── score_quiz.png    # 점수 및 기록 확인 스크린샷
 │   ├── solve_quiz.png    # 퀴즈 풀기 실행 스크린샷
-│   └──
+│   └── commit.png        # Git 커밋 내역 스크린샷
 ├── .gitignore            # Git 추적 제외 파일 설정
 ├── main.py               # 메인 소스코드 (Quiz, QuizGame 클래스 구현)
 ├── README.md             # 프로젝트 설명 문서
