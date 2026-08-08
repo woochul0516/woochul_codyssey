@@ -76,3 +76,107 @@ E1-2/
 ├── README.md             # 프로젝트 설명 문서
 └── state.json            # 퀴즈, 최고 점수, 플레이 히스토리 저장 파일 (UTF-8)
 ```
+
+---
+
+## 6. 실습 스크린샷
+
+| 기능 구분 | 스크린샷 예시 |
+| :--- | :---: |
+| **메인 메뉴 화면** | ![메인 메뉴](images/menu_quiz.png) |
+| **퀴즈 풀기** | ![퀴즈 풀기](images/solve_quiz.png) |
+| **퀴즈 추가** | ![퀴즈 추가](images/add_quiz.png) |
+| **퀴즈 목록** | ![퀴즈 목록](images/list_quiz.png) |
+| **퀴즈 삭제** | ![퀴즈 삭제](images/del_quiz.png) |
+| **점수 및 히스토리** | ![점수 확인](images/score_quiz.png) |
+
+---
+
+## 7. 데이터 파일 설명 (`state.json`)
+- `경로`: 프로젝트 루트(`./state.json`)
+- `인코딩`: UTF-8
+- `역할`: 등록된 퀴즈 데이터, 역대 최고 점수, 플레이 히스토리 유지
+
+`스키마 예시`
+```JSON
+{
+    "quizzes": [
+        {
+            "question": "컴퓨터의 '뇌' 역할을 하며 연산과 명령을 처리하는 핵심 하드웨어 장치는?",
+            "choices": [
+                "RAM (메모리)",
+                "CPU (중앙처리장치)",
+                "SSD (보조기억장치)",
+                "GPU (그래픽카드)"
+            ],
+            "answer": 2,
+            "hint": "중앙처리장치의 약자입니다."
+        },
+        {
+            "question": "전원이 꺼지면 저장된 데이터가 사라지는 '휘발성' 기억장치는?",
+            "choices": [
+                "RAM",
+                "HDD",
+                "SSD",
+                "ROM"
+            ],
+            "answer": 1,
+            "hint": "주기억장치 중 하나로 주소를 직접 참조합니다."
+        },
+        {
+            "question": "컴퓨터가 사용하는 2진법에서 0과 1의 최소 데이터 단위를 무엇이라고 할까요?",
+            "choices": [
+                "Byte",
+                "Bit",
+                "KB",
+                "Word"
+            ],
+            "answer": 2,
+            "hint": "Binary Digit의 줄임말입니다."
+        },
+        {
+            "question": "CPU, 메모리, 그래픽카드 등 컴퓨터의 모든 부품을 연결하는 메인 회로 기판은?",
+            "choices": [
+                "파워 서플라이",
+                "메인보드 (마더보드)",
+                "랜카드",
+                "사운드 카드"
+            ],
+            "answer": 2,
+            "hint": "마더보드라고도 부릅니다."
+        },
+        {
+            "question": "다음 중 비휘발성 저장장치로 물리적 회전 디스크 대신 반도체를 사용하는 보조기억장치는?",
+            "choices": [
+                "RAM",
+                "HDD",
+                "SSD",
+                "CD-ROM"
+            ],
+            "answer": 3,
+            "hint": "Solid State Drive의 약자입니다."
+        }
+    ],
+    "best_score": 4.5,
+    "history": [
+        {
+            "date": "2026-08-02 20:40:09",
+            "total_questions": 5,
+            "score": 4.5
+        },
+        {
+            "date": "2026-08-02 20:43:28",
+            "total_questions": 5,
+            "score": 3.5
+        },
+        {
+            "date": "2026-08-02 22:07:19",
+            "total_questions": 1,
+            "score": 1.0
+        }
+    ]
+}
+```
+
+---
+
