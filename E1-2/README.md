@@ -116,7 +116,7 @@ E1-2/
 
 ## 7. 클래스별 역할 및 책임 분리 (Architecture & Responsibilities)
 
-본 프로젝트는 단일 책임 원칙(Single Responsibility Principle)을 준수하여 **개별 데이터 객체(`Quiz`)**와 **전체 시스템 제어기(`QuizGame`)**의 책임을 명확히 분리하여 설계되었습니다.
+본 프로젝트는 단일 책임 원칙(Single Responsibility Principle)을 준수하여 개별 데이터 객체(`Quiz`)와 전체 시스템 제어기(`QuizGame`)의 책임을 명확히 분리하여 설계되었습니다.
 
 ### 1. `Quiz` 클래스 (데이터 모델 & 변환)
 개별 퀴즈 항목의 **데이터 표현 및 포맷 변환**만을 담당하는 도메인 모델(Entity)입니다.
@@ -320,7 +320,7 @@ E1-2/
 
 ### 2) 향후 대응 및 개선 로드맵 (Optimization Roadmap)
 - RDBMS 도입 (SQLite / PostgreSQL):
-  - JSON 파일 방식에서 경량 관계형 데이터베이스인 SQLite로 마이그레이션하여, 문제 ID/키워드에 B-Tree 인덱스($O(\log N)$)를 적용합니다.
+  - JSON 파일 방식에서 경량 관계형 데이터베이스인 SQLite로 마이그레이션하여, 문제 ID/키워드에 B-Tree 인덱스(O(logN))를 적용합니다.
   - 전체 데이터를 메모리에 올리지 않고 SQL `LIMIT` / `OFFSET`을 통한 페이징(Pagination) 조회를 구현합니다.
 - 부분 저장 (Atomic Append / Write):
   - 파일 방식을 유지할 경우, JSON 대신 JSONL (JSON Lines) 포맷을 채택하여 새 퀴즈 추가 시 전체 변환 없이 `a` (append) 모드로 디스크 쓰기를 최소화합니다.
