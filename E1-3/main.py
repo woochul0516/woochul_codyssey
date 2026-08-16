@@ -5,10 +5,6 @@ import re
 import time
 
 
-# ==========================================
-# 1. 라벨 정규화 & 패턴 생성기 (보너스 과제)
-# ==========================================
-
 def normalize_label(label: str) -> str:
     """
     비정형 라벨('+', 'cross', 'Cross', 'x', 'X' 등)을 표준 라벨('Cross', 'X')로 정규화합니다.
@@ -49,10 +45,6 @@ def flatten_2d(mat: list[list[float]]) -> list[float]:
     """2차원 리스트를 1차원 평탄화 배열(N^2)로 변환합니다."""
     return [elem for row in mat for elem in row]
 
-
-# ==========================================
-# 2. MAC (Multiply-Accumulate) 연산 엔진
-# ==========================================
 
 def mac_2d(mat_a: list[list[float]], mat_b: list[list[float]]) -> float:
     """
@@ -111,10 +103,6 @@ def classify_pattern(score_cross: float, score_x: float, eps: float = 1e-9) -> s
     return "Cross" if score_cross > score_x else "X"
 
 
-# ==========================================
-# 3. 데이터 로딩 & 샘플 자동 생성
-# ==========================================
-
 def ensure_sample_json(filepath: str = "data.json"):
     """data.json 파일이 없을 경우 기본 테스트 데이터셋을 자동 생성합니다."""
     if os.path.exists(filepath):
@@ -157,10 +145,6 @@ def ensure_sample_json(filepath: str = "data.json"):
     with open(filepath, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-
-# ==========================================
-# 4. 실행 모드 구현
-# ==========================================
 
 def run_user_input_mode():
     """모드 1: 3x3 (또는 N x N) 콘솔 사용자 입력 기반 분석"""
@@ -345,10 +329,6 @@ def run_benchmark():
     print(f"-> 1D 최적화를 통한 성능 향상폭: 약 {diff_pct:.2f}% 속도 개선")
 
 
-# ==========================================
-# 5. 메인 컨트롤러 루프
-# ==========================================
-
 def main():
     while True:
         print("\n==========================================")
@@ -376,4 +356,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except (KeyboardInterrupt, EOFError):
+        print("\n\n사용자에 의해 프로그램이 정지되었습니다.")
